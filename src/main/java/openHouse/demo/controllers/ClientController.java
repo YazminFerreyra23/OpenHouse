@@ -34,20 +34,14 @@ public class ClientController {
     public String registroCliente(@RequestParam String name, @RequestParam String password, String password2,
             @RequestParam String email, @RequestParam String dni, @RequestParam String phone,
             @RequestParam("birthdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate,
-            @RequestParam(required = false) MultipartFile archivo, ModelMap model) throws IOException {
+            @RequestParam(required = false) MultipartFile archivo, ModelMap model) throws IOException , MiException{
+
         try {
             clienteService.createClient(name, password, password2, email, dni, phone, birthdate, archivo);
             model.put("exito", "Cliente registrado correctamente!");
             return "redirect:/login";
-        } catch (MiException ex) {
+        } catch (MiException | IOException ex) {
 
-            model.put("error", ex.getMessage());
-            model.put("name", name);
-            model.put("email", email);
-            model.put("dni", dni);
-            model.put("phone", phone);
-            return "registrar.html";
-        } catch (IOException ex) {
             model.put("error", ex.getMessage());
             model.put("name", name);
             model.put("email", email);
